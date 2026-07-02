@@ -6,8 +6,7 @@ const MAX_RETRIES = 3;
 function getSafeUrl(url) {
   if (!url) return url;
   const isHttpsPage = window.location.protocol === 'https:';
-  const isHttpStream = url.startsWith('http://');
-  if (isHttpsPage && isHttpStream) {
+  if (isHttpsPage) {
     return `/api/proxy?url=${encodeURIComponent(url)}`;
   }
   return url;
@@ -50,11 +49,18 @@ export function useHlsPlayer(videoRef, url) {
     } else if (Hls.isSupported()) {
       const hls = new Hls({
         enableWorker: true,
-        lowLatencyMode: true,
-        backbufferLength: 30,
-        manifestLoadingTimeOut: 10000,
-        levelLoadingTimeOut: 10000,
-        fragLoadingTimeOut: 20000,
+        lowLatencyMode: false,
+        backbufferLength: 60,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 60,
+        manifestLoadingTimeOut: 15000,
+        levelLoadingTimeOut: 15000,
+        fragLoadingTimeOut: 30000,
+        manifestLoadingMaxRetry: 3,
+        levelLoadingMaxRetry: 3,
+        fragLoadingMaxRetry: 3,
+        startLevel: 0,
+        capLevelToPlayerSize: true,
       });
       hlsRef.current = hls;
       hls.loadSource(safeUrl);
