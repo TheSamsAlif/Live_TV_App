@@ -3,7 +3,7 @@ import { useApp } from './context/AppContext';
 import VideoPlayer from './components/VideoPlayer';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorScreen from './components/ErrorScreen';
-import { FiMonitor, FiSearch, FiX, FiStar, FiChevronDown, FiChevronUp, FiGithub, FiMaximize, FiMinimize } from 'react-icons/fi';
+import { FiMonitor, FiSearch, FiX, FiStar, FiChevronDown, FiChevronUp, FiGithub, FiMaximize, FiMinimize, FiExternalLink } from 'react-icons/fi';
 
 const FALLBACK_LOGO = 'data:image/svg+xml,' + encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="%23374366"/><text x="20" y="24" text-anchor="middle" fill="%2394a3b8" font-size="14" font-family="system-ui">TV</text></svg>'
@@ -29,7 +29,11 @@ function ChannelCard({ channel, onSelect, isActive, isFav, onFav }) {
       <span className="text-xs font-medium text-white/70 text-center leading-tight truncate w-full group-hover:text-cyan-300 transition-colors">
         {channel.name}
       </span>
-      {isActive && (
+      {channel.type === 'link' ? (
+        <span className="absolute top-2 right-2 p-1 text-cyan-400/60" title="Opens external site">
+          <FiExternalLink className="w-3 h-3" />
+        </span>
+      ) : isActive && (
         <span className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full shadow-[0_0_6px_#22c55e] animate-pulse" />
       )}
       <button
@@ -53,6 +57,10 @@ export default function App() {
   const [isFS, setIsFS] = useState(false);
 
   function handleChannelClick(channel) {
+    if (channel.type === 'link') {
+      window.open(channel.url, '_blank', 'noopener,noreferrer');
+      return;
+    }
     setCurrentChannel(channel);
     setShowPlayer(true);
   }

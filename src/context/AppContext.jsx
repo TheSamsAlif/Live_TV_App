@@ -139,9 +139,26 @@ export function AppProvider({ children }) {
         const text = await response.text();
         if (!text.trim()) continue;
         const channels = parseM3U(text);
-        allChannels = [...allChannels, ...channels];
+        allChannels = [...allChannels, ...channels.map(c => ({ ...c, type: 'stream' }))];
       } catch { /* skip */ }
     }
+
+    // Load external links
+    try {
+      const linkRes = await fetch('/links.json');
+      if (linkRes.ok) {
+        const links = await linkRes.json();
+        const linkChannels = links.map((link, i) => ({
+          id: `link-${i}`,
+          name: link.name,
+          logo: link.logo || '',
+          group: link.group || 'Uncategorized',
+          url: link.url,
+          type: 'link',
+        }));
+        allChannels = [...allChannels, ...linkChannels];
+      }
+    } catch { /* skip */ }
 
     if (allChannels.length === 0) {
       dispatch({ type: 'SET_ERROR', payload: 'No channels found in any playlist source' });
