@@ -122,23 +122,46 @@ export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const loadedRef = useRef(false);
 
+  const PLAYLIST_SOURCES = [
+    'https://iptv-org.github.io/iptv/categories/sports.m3u',
+    'https://iptv-org.github.io/iptv/categories/news.m3u',
+    'https://iptv-org.github.io/iptv/categories/entertainment.m3u',
+    '/playlist.m3u',
+  ];
+
   const loadPlaylist = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     dispatch({ type: 'SET_ERROR', payload: null });
-    try {
-      const response = await fetch('/playlist.m3u');
-      if (!response.ok) throw new Error(`Failed to load playlist (HTTP ${response.status})`);
-      const text = await response.text();
-      if (!text.trim()) throw new Error('Playlist is empty');
-      const channels = parseM3U(text);
-      if (channels.length === 0) throw new Error('No channels found in playlist');
-      dispatch({ type: 'SET_CHANNELS', payload: channels });
-      const lastId = loadFromStorage(STORAGE_KEYS.LAST_CHANNEL, null);
-      if (lastId) {
-        dispatch({ type: 'RESTORE_LAST_CHANNEL', payload: lastId });
-      }
-    } catch (err) {
-      dispatch({ type: 'SET_ERROR', payload: err.message });
+
+    let allChannels = [];
+    for (const source of PLAYLIST_SOURCES) {
+      try {
+        const response = await fetch(source);
+        if (!response.ok) continue;
+        const text = await response.text();
+        if (!text.trim()) continue;
+        const channels = parseM3U(text);
+        allChannels = [...allChannels, ...channels];
+      } catch { /* skip */ }
+    }
+
+    if (allChannels.length === 0) {
+      dispatch({ type: 'SET_ERROR', payload: 'No channels found in any playlist source' });
+      return;
+    }
+
+    const seen = new Set();
+    const unique = allChannels.filter((ch) => {
+      const key = ch.name + ch.url;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    dispatch({ type: 'SET_CHANNELS', payload: unique });
+    const lastId = loadFromStorage(STORAGE_KEYS.LAST_CHANNEL, null);
+    if (lastId) {
+      dispatch({ type: 'RESTORE_LAST_CHANNEL', payload: lastId });
     }
   }, []);
 
