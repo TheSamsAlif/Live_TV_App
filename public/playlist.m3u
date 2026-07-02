@@ -1,0 +1,133 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://img.logo/tntsports.png" group-title="Argentina",TNT Sports ARG
+https://1nyaler.streamhostingcdn.top/stream/30/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/tycsports.png" group-title="Argentina",TyC Sports ARG
+https://1nyaler.streamhostingcdn.top/stream/84/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn.png" group-title="Latin America",ESPN LAT
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espnlat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn.png" group-title="Argentina",ESPN ARG
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espnar_lng.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn2.png" group-title="Argentina",ESPN 2
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn2ar_lng.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn3.png" group-title="Argentina",ESPN 3
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn3ar_lng.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn3.png" group-title="Latin America",ESPN 3 720p
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn3lat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn4.png" group-title="Latin America",ESPN 4 720p
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn4lat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn4.png" group-title="Latin America",ESPN 4
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn4lat.playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn5.png" group-title="Latin America",ESPN 5 720p
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn5lat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn6.png" group-title="Latin America",ESPN 6
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn6lat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn7.png" group-title="Latin America",ESPN 7
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espn7lt_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espnpremium.png" group-title="Argentina",ESPN PREMIUM
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espnpremar_lng.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espnpremium.png" group-title="Latin America",ESPN PREMIUM 720p
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-espnpremlat_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/foxsports.png" group-title="Argentina",FOX SPORTS
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-fox1ar_720.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/foxsports2.png" group-title="Argentina",FOX SPORT 2
+http://181.191.141.7/Live/51334cbb88db0e050c59ef2d28c53491/local-fox2ar.playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/winsports.png" group-title="Colombia",Win Sports
+http://181.78.17.52:8000/play/a0pw/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/winsports.png" group-title="Colombia",WIN SPORTS
+http://181.78.71.71:18000/play/a03p/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/winsports.png" group-title="Colombia",win+
+http://190.60.37.154:45000/play/a00q/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/tycsports.png" group-title="Argentina",TYC
+http://190.60.37.154:45000/play/a05a/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dsports.png" group-title="Argentina",DSPORTS 1
+http://190.117.20.37:8000/play/a08d/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dsports.png" group-title="Argentina",DSports
+http://205.235.6.29:8000/play/a0nq/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dsports.png" group-title="Argentina",DSPORTS +
+http://217.26.190.76:8888/play/a0jb/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/directvsports.png" group-title="Argentina",DIRECTV SPORTS
+http://217.26.190.76:8888/play/a0co/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/tudn.png" group-title="USA",TUDN USA
+http://m3u.tvcluboficial.com/m/m/957.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="Spain",BEIN SPORTS Ñ
+https://amg01334-beinsportsllc-beinxtraesp-localnow-aekzc.amagi.tv/playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="F1",DAZN F1
+https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/374.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/tudn.png" group-title="Mexico",TUDN 1
+https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/128.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espndeportes.png" group-title="USA",ESPN DEPORTES
+https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/112.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/tudn.png" group-title="Mexico",TUDN 2
+https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/791.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/clarosports.png" group-title="Latin America",CLARO SPORTS
+http://162.19.255.233:8080/play/UNbAl57p9hXZClOu56FCTUSaL5q1VtS-E1wCfb1nvO4/m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/espn.png" group-title="Colombia",ESPN CO
+https://tv.topmediatv.net:25463/live/TopMediaWeb/bOteTR8ED1/10685.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="Portugal",Dazn 1
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2531/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="Portugal",Dazn 2
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2532/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="Portugal",Dazn 3
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/7062/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="Portugal",Dazn 4
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2534/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/dazn.png" group-title="Portugal",Dazn 5
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2535/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="France",BEIN 3
+http://145.239.5.177/559/mpegts
+#EXTINF:-1 tvg-logo="https://img.logo/canalplus.png" group-title="France",CANAL + Sport
+http://151.80.18.177:86/Canal+_sport_HD/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/supersport.png" group-title="Albania",Super Sport 1
+http://93.93.113.95:25461/TV-Berati/XtreamCodes/494
+#EXTINF:-1 tvg-logo="https://img.logo/supersport.png" group-title="Albania",Super Sport 2
+http://93.93.113.95:25461/TV-Berati/XtreamCodes/495
+#EXTINF:-1 tvg-logo="https://img.logo/novasport.png" group-title="Czech",NOVA SPORT 1 HD
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2555/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/arenasport.png" group-title="Czech",ARENA SPORT 1
+http://88.212.15.19/live/test_arenasport/playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/arenasport.png" group-title="Czech",ARENA SPORT 2
+http://88.212.15.19/live/test_arenasport_dva/playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/maxsport.png" group-title="Bulgaria",MAX SPORT 1
+http://77.46.130.252:99/maxsport1
+#EXTINF:-1 tvg-logo="https://img.logo/maxsport.png" group-title="Bulgaria",MAX SPORT 2
+http://77.46.130.252:99/maxsport2
+#EXTINF:-1 tvg-logo="https://img.logo/maxsport.png" group-title="Bulgaria",MAX SPORT 3
+http://77.46.130.252:99/maxsport3
+#EXTINF:-1 tvg-logo="https://img.logo/maxsport.png" group-title="Bulgaria",MAX SPORT 4
+http://77.46.130.252:99/maxsport4
+#EXTINF:-1 tvg-logo="https://img.logo/sportdigital.png" group-title="Germany",Sportdigital
+https://jmp2.uk/stvp-ATAJ0500433A
+#EXTINF:-1 tvg-logo="https://img.logo/ziggo.png" group-title="Netherlands",ZIGGO SPORT 2 HD
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2561/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/ziggo.png" group-title="Netherlands",ZIGGO SPORT 3 HD
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2559/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/5sport.png" group-title="Israel",5 SPORT
+http://wo0dyefk.dienalt.org/iptv/DV3AC2Q6YSR9XE/2558/index.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/telemundo.png" group-title="Mexico",TELEMUNDO
+https://nbculocallive.akamaized.net/hls/live/2037499/puertorico/stream1/master.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/rmtv.png" group-title="Spain",REAL MADRID TV
+https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/bitrate_3.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/sportitalia.png" group-title="Italy",SPORT ITALIA
+https://amg01370-italiansportcom-sportitalia-rakuten-3hmdb.amagi.tv/hls/amagi_hls_data_rakutenAA-sportitalia-rakuten/CDN/1920x1080_4540800/chunklist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/lequipe.png" group-title="France",L'Equipe
+https://jmp2.uk/stvp-FR200016Y5
+#EXTINF:-1 tvg-logo="https://img.logo/golftv.png" group-title="Sports",Golf Channel
+http://45.167.1.136:8000/play/a05s
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="Turkey",BEIN SPORTS 2 Turkey
+https://andro.okan11gote12sokan.cfd/checklist/androstreamlivebs2.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="Turkey",BEIN SPORTS 3 Turkey
+https://andro.okan11gote12sokan.cfd/checklist/androstreamlivebs3.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="Turkey",BEIN SPORTS 4 Turkey
+https://andro.okan11gote12sokan.cfd/checklist/androstreamlivebs4.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/bein.png" group-title="Turkey",BEIN SPORTS 5 Turkey
+https://andro.226503.xyz/checklist/androstreamlivebs5.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/nbcolympics.png" group-title="USA",NBC Team USA
+https://amg01416-amg01416c4-firetv-us-4522.playouts.now.amagi.tv/playlist.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/beinsportsextra.png" group-title="Spain",BEIN SPORT EXTRA Ñ
+https://bein-esp-xumo.amagi.tv/playlistR720P.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/redbull.png" group-title="Sports",Red Bull TV
+http://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/cazetv.png" group-title="Brazil",CAZE TV 1
+https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8
+#EXTINF:-1 tvg-logo="https://img.logo/garagetv.png" group-title="Sports",Garage TV
+https://stream1.sersat.com/hls/garagetv.m3u8
