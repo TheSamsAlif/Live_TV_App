@@ -125,10 +125,6 @@ export function AppProvider({ children }) {
   const PLAYLIST_SOURCES = [
     'https://raw.githubusercontent.com/imShakil/tvlink/refs/heads/main/iptv.m3u8',
     'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/plex_all.m3u',
-    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/samsungtvplus_all.m3u',
-    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/roku_all.m3u',
-    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/tubi_all.m3u',
-    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/plutotv_all.m3u',
     '/playlist.m3u',
   ];
 
