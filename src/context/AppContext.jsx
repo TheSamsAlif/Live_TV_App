@@ -123,6 +123,7 @@ export function AppProvider({ children }) {
   const loadedRef = useRef(false);
 
   const PLAYLIST_SOURCES = [
+    'https://raw.githubusercontent.com/imShakil/tvlink/refs/heads/main/iptv.m3u8',
     'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/plex_all.m3u',
     'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/samsungtvplus_all.m3u',
     'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/roku_all.m3u',
