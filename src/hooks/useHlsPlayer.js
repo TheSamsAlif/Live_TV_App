@@ -3,6 +3,16 @@ import Hls from 'hls.js';
 
 const MAX_RETRIES = 3;
 
+function getSafeUrl(url) {
+  if (!url) return url;
+  const isHttpsPage = window.location.protocol === 'https:';
+  const isHttpStream = url.startsWith('http://');
+  if (isHttpsPage && isHttpStream) {
+    return `/api/proxy?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
+
 export function useHlsPlayer(videoRef, url) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,17 +38,26 @@ export function useHlsPlayer(videoRef, url) {
     setIsLoading(true);
     destroy();
 
+    const safeUrl = getSafeUrl(streamUrl);
+
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = streamUrl;
+      video.src = safeUrl;
       video.addEventListener('loadedmetadata', () => setIsLoading(false), { once: true });
       video.addEventListener('error', () => {
         setError('Failed to load stream');
         setIsLoading(false);
       }, { once: true });
     } else if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true, lowLatencyMode: true, backbufferLength: 30 });
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
+        backbufferLength: 30,
+        manifestLoadingTimeOut: 10000,
+        levelLoadingTimeOut: 10000,
+        fragLoadingTimeOut: 20000,
+      });
       hlsRef.current = hls;
-      hls.loadSource(streamUrl);
+      hls.loadSource(safeUrl);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         setIsLoading(false);
