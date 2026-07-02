@@ -123,9 +123,11 @@ export function AppProvider({ children }) {
   const loadedRef = useRef(false);
 
   const PLAYLIST_SOURCES = [
-    'https://iptv-org.github.io/iptv/categories/sports.m3u',
-    'https://iptv-org.github.io/iptv/categories/news.m3u',
-    'https://iptv-org.github.io/iptv/categories/entertainment.m3u',
+    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/plex_all.m3u',
+    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/samsungtvplus_all.m3u',
+    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/roku_all.m3u',
+    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/tubi_all.m3u',
+    'https://raw.githubusercontent.com/BuddyChewChew/app-m3u-generator/main/playlists/plutotv_all.m3u',
     '/playlist.m3u',
   ];
 
