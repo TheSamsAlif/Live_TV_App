@@ -35,12 +35,12 @@ export default async function handler(req, res) {
 
     if (isM3U) {
       let text = await response.text();
-      // Rewrite relative URLs in M3U manifest to go through proxy
+      // Rewrite ALL URLs in M3U manifest to go through proxy (fixes CORS)
       text = text.replace(/^([^#\s].+)$/gm, (match) => {
         match = match.trim();
-        if (!match || match.startsWith('#') || match.startsWith('http://') || match.startsWith('https://')) return match;
+        if (!match || match.startsWith('#')) return match;
         try {
-          const resolved = new URL(match, baseUrl).href;
+          const resolved = match.startsWith('http') ? match : new URL(match, baseUrl).href;
           return `/api/proxy?url=${encodeURIComponent(resolved)}`;
         } catch {
           return match;
