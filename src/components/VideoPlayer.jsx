@@ -4,12 +4,16 @@ import { useHlsPlayer } from '../hooks/useHlsPlayer';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import {
   FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiMinimize,
-  FiCommand, FiAlertTriangle, FiRefreshCw
+  FiCommand, FiAlertTriangle, FiRefreshCw, FiArrowLeft
 } from 'react-icons/fi';
 import { RiPictureInPictureLine, RiPictureInPictureFill } from 'react-icons/ri';
 
+const FALLBACK_LOGO = 'data:image/svg+xml,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#1a1a2e"/><text x="20" y="24" text-anchor="middle" fill="#06b6d4" font-size="14" font-family="system-ui" font-weight="bold">TV</text></svg>'
+);
+
 export default function VideoPlayer({ onBack }) {
-  const { currentChannel, volume, isMuted, setVolume, setMuted } = useApp();
+  const { currentChannel, volume, isMuted, setVolume, setMuted, setCurrentChannel } = useApp();
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const hideTimerRef = useRef(null);
@@ -19,7 +23,7 @@ export default function VideoPlayer({ onBack }) {
   const [isPiP, setIsPiP] = useState(false);
   const [showVolume, setShowVolume] = useState(false);
 
-  const { isLoading, error, retry, loadProgress } = useHlsPlayer(videoRef, currentChannel?.url);
+  const { isLoading, error, retry, loadProgress } = useHlsPlayer(videoRef, currentChannel?.url, currentChannel);
 
   function handleTogglePlay() {
     const video = videoRef.current;
@@ -105,7 +109,7 @@ export default function VideoPlayer({ onBack }) {
     if (currentChannel?.url) {
       navigator.clipboard.writeText(currentChannel.url).then(() => {
         const toast = document.createElement('div');
-        toast.className = 'fixed bottom-4 right-4 glass px-4 py-2 rounded-lg text-sm text-white z-50 animate-slide-up';
+        toast.className = 'fixed bottom-4 right-4 glass-strong px-4 py-2 rounded-lg text-sm text-white z-50 animate-slide-up';
         toast.textContent = 'Stream URL copied to clipboard!';
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2500);
@@ -120,6 +124,10 @@ export default function VideoPlayer({ onBack }) {
       handleCopyUrl();
     }
   }, [currentChannel, handleCopyUrl]);
+
+  const handleBack = useCallback(() => {
+    setCurrentChannel(null);
+  }, [setCurrentChannel]);
 
   if (!currentChannel) return null;
 
@@ -150,7 +158,8 @@ export default function VideoPlayer({ onBack }) {
                   <defs>
                     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#06b6d4" />
-                      <stop offset="100%" stopColor="#8b5cf6" />
+                      <stop offset="50%" stopColor="#8b5cf6" />
+                      <stop offset="100%" stopColor="#d946ef" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -179,11 +188,11 @@ export default function VideoPlayer({ onBack }) {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <button onClick={retry} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-fuchsia-500/20 border border-cyan-400/30 text-cyan-300 hover:from-cyan-500/30 hover:to-fuchsia-500/30 transition-all text-sm font-medium">
+                <button onClick={retry} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-500/20 border border-cyan-400/30 text-cyan-300 hover:from-cyan-500/30 hover:to-violet-500/30 transition-all text-sm font-medium">
                   <FiRefreshCw className="w-4 h-4" />
                   Retry Now
                 </button>
-                <button onClick={onBack} className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white/80 hover:bg-white/10 transition-all text-sm">
+                <button onClick={handleBack} className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white/80 hover:bg-white/10 transition-all text-sm">
                   Back
                 </button>
               </div>
@@ -200,6 +209,9 @@ export default function VideoPlayer({ onBack }) {
 
         <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <div className="absolute top-4 left-4 right-4 flex items-center gap-3">
+            <button onClick={handleBack} className="btn-ghost text-white hover:bg-white/10">
+              <FiArrowLeft className="w-5 h-5" />
+            </button>
             <span className="live-badge">
               <span className="live-badge-dot" />
               LIVE
@@ -231,7 +243,7 @@ export default function VideoPlayer({ onBack }) {
                   step="0.05"
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-full h-1 accent-primary-500 cursor-pointer"
+                  className="w-full h-1 accent-cyan-500 cursor-pointer"
                 />
               </div>
             </div>
@@ -255,17 +267,17 @@ export default function VideoPlayer({ onBack }) {
         </div>
       </div>
 
-      <div className="glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <img
             src={currentChannel.logo || FALLBACK_LOGO}
             alt={currentChannel.name}
-            className="w-10 h-10 rounded-lg object-cover bg-dark-700 flex-shrink-0"
+            className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0 ring-1 ring-white/10"
             onError={(e) => { e.target.src = FALLBACK_LOGO; }}
           />
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-white truncate">{currentChannel.name}</h2>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-primary-600/20 text-primary-400 border border-primary-500/20">
+            <h2 className="text-lg font-bold text-white truncate">{currentChannel.name}</h2>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-cyan-600/20 text-cyan-400 border border-cyan-500/20">
               {currentChannel.group}
             </span>
           </div>
@@ -282,7 +294,3 @@ export default function VideoPlayer({ onBack }) {
     </div>
   );
 }
-
-const FALLBACK_LOGO = 'data:image/svg+xml,' + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="%23374366"/><text x="20" y="24" text-anchor="middle" fill="%2394a3b8" font-size="14" font-family="system-ui">TV</text></svg>'
-);

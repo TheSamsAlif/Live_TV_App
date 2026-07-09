@@ -117,13 +117,6 @@ function appReducer(state, action) {
   }
 }
 
-const JSON_SOURCES = [
-  { url: 'https://tv.shajon.dev/playlist/bangla.json', fallbackGroup: 'Bangla' },
-  { url: 'https://tv.shajon.dev/playlist/channels.json', fallbackGroup: 'International' },
-  { url: 'https://tv.shajon.dev/playlist/fifa.json', fallbackGroup: 'FIFA' },
-  { url: 'https://tv.shajon.dev/playlist/sports.json', fallbackGroup: 'Sports' },
-];
-
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const loadedRef = useRef(false);
@@ -134,28 +127,28 @@ export function AppProvider({ children }) {
 
     let allChannels = [];
 
-    const results = await Promise.allSettled(
-      JSON_SOURCES.map(async (source) => {
-        const response = await fetch(source.url);
-        if (!response.ok) return [];
-        const data = await response.json();
-        return data.map((ch, idx) => ({
+    // Load from local channels.json (pre-built from m3u + JSON sources)
+    try {
+      const res = await fetch('/channels.json');
+      if (res.ok) {
+        const data = await res.json();
+        allChannels = data.map((ch, idx) => ({
           id: `ch-${idx}-${Math.random().toString(36).slice(2, 7)}`,
-          name: ch.name || ch.channel || 'Unknown',
-          logo: ch.logo || ch.logo_url || '',
-          group: ch.group || source.fallbackGroup,
-          url: ch.url || ch.stream_url || ch.link || '',
-          type: 'stream',
+          name: ch.name || 'Unknown',
+          logo: ch.logo || '',
+          group: ch.group || 'Other',
+          url: ch.url || '',
+          type: ch.type || 'stream',
+          useProxy: ch.useProxy || false,
+          referer: ch.referer || '',
+          origin: ch.origin || '',
         }));
-      })
-    );
-
-    for (const result of results) {
-      if (result.status === 'fulfilled' && Array.isArray(result.value)) {
-        allChannels = [...allChannels, ...result.value];
       }
+    } catch (err) {
+      console.error('Failed to load channels.json:', err);
     }
 
+    // Also load external links
     try {
       const linkRes = await fetch('/links.json');
       if (linkRes.ok) {
