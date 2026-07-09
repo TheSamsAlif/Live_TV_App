@@ -28,13 +28,16 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0b1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 px-3 sm:px-4 h-14">
-        <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
-            <FiTv className="text-white" size={18} />
+        <a href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+          <div className="logo-mark">
+            <span className="logo-ring" />
+            <span className="logo-glow" />
+            <FiTv className="logo-tv" size={18} />
+            <span className="logo-live-dot" />
           </div>
           <div className="hidden sm:block leading-tight">
-            <span className="block text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">SAMS ALIF</span>
-            <span className="block text-[10px] font-medium text-blue-600">LIVE TV</span>
+            <span className="block text-sm font-extrabold tracking-tight logo-text-gradient">SAMS ALIF</span>
+            <span className="block text-[10px] font-bold tracking-[0.2em] text-blue-600 dark:text-cyan-400">LIVE&nbsp;TV</span>
           </div>
         </a>
 
