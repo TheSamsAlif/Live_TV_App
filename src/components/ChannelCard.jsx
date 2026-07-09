@@ -1,9 +1,9 @@
 import { useApp } from '../context/AppContext';
-import { FiStar, FiExternalLink } from 'react-icons/fi';
+import { FiStar, FiExternalLink, FiPlay } from 'react-icons/fi';
 import { useState } from 'react';
 
 const FALLBACK_LOGO = 'data:image/svg+xml,' + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="%23374366"/><text x="20" y="24" text-anchor="middle" fill="%2394a3b8" font-size="14" font-family="system-ui">TV</text></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#1a1a2e"/><text x="20" y="24" text-anchor="middle" fill="#06b6d4" font-size="14" font-family="system-ui" font-weight="bold">TV</text></svg>'
 );
 
 export default function ChannelCard({ channel, onSelect }) {
@@ -26,7 +26,7 @@ export default function ChannelCard({ channel, onSelect }) {
       onClick={handleClick}
       className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 border ${
         isActive
-          ? 'bg-gradient-to-r from-violet-600/15 to-fuchsia-600/15 border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.12)]'
+          ? 'bg-gradient-to-r from-cyan-600/15 to-violet-600/15 border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.12)]'
           : 'border-transparent hover:bg-white/[0.05] hover:border-white/10'
       }`}
       data-channel-id={channel.id}
@@ -44,14 +44,14 @@ export default function ChannelCard({ channel, onSelect }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium truncate ${isActive ? 'text-violet-300' : 'text-white/80'}`}>
+        <p className={`text-sm font-medium truncate ${isActive ? 'text-cyan-300' : 'text-white/80'}`}>
           {channel.name}
         </p>
         <p className="text-[10px] text-white/40 truncate mt-0.5">{channel.group}</p>
       </div>
       <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
         {channel.type === 'link' && (
-          <FiExternalLink className="w-3 h-3 text-violet-400/60" />
+          <FiExternalLink className="w-3 h-3 text-cyan-400/60" />
         )}
         <button
           onClick={handleFav}

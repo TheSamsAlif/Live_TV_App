@@ -4,15 +4,19 @@ import Hls from 'hls.js';
 const MAX_RETRIES = 5;
 const RETRY_DELAY = 2000;
 
-function getSafeUrl(url) {
+function getSafeUrl(url, useProxy, referer, origin) {
   if (!url) return url;
+  
   if (/^https?:\/\//i.test(url)) {
-    return `/api/proxy?url=${encodeURIComponent(url)}`;
+    let proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
+    if (referer) proxyUrl += `&referer=${encodeURIComponent(referer)}`;
+    if (origin) proxyUrl += `&origin=${encodeURIComponent(origin)}`;
+    return proxyUrl;
   }
   return url;
 }
 
-export function useHlsPlayer(videoRef, url) {
+export function useHlsPlayer(videoRef, url, channelData) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -49,7 +53,10 @@ export function useHlsPlayer(videoRef, url) {
     setLoadProgress(0);
     destroy();
 
-    const safeUrl = getSafeUrl(streamUrl);
+    const useProxy = channelData?.useProxy || false;
+    const referer = channelData?.referer || '';
+    const origin = channelData?.origin || '';
+    const safeUrl = getSafeUrl(streamUrl, useProxy, referer, origin);
 
     progressTimerRef.current = setInterval(() => {
       setLoadProgress((p) => Math.min(p + 5, 90));
@@ -114,7 +121,7 @@ export function useHlsPlayer(videoRef, url) {
       setError('HLS playback is not supported in this browser');
       setIsLoading(false);
     }
-  }, [videoRef, destroy]);
+  }, [videoRef, destroy, channelData]);
 
   const retry = useCallback(() => {
     if (url) {

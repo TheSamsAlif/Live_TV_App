@@ -1,17 +1,17 @@
-import { FiGithub, FiHeart } from 'react-icons/fi';
+import { FiGithub, FiHeart, FiTv } from 'react-icons/fi';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-dark-900/50">
+    <footer className="border-t border-white/5 mt-8">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-dark-500 text-xs">
+          <div className="flex items-center gap-2 text-white/30 text-xs">
             <span>Developed by</span>
               <a
                 href="https://github.com/TheSamsAlif/Live_TV_App"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-300 hover:text-fuchsia-300 transition-colors font-medium"
+                className="text-cyan-400 hover:text-fuchsia-400 transition-colors font-medium"
               >
                 SAMS-ALIF.LIVE
               </a>
@@ -23,20 +23,20 @@ export default function Footer() {
               href="https://github.com/TheSamsAlif/Live_TV_App"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-dark-500 hover:text-dark-300 transition-colors text-xs"
+              className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-xs"
             >
               <FiGithub className="w-3.5 h-3.5" />
               GitHub
             </a>
-            <span className="flex items-center gap-1 text-dark-600 text-xs">
-                Made with <FiHeart className="w-3 h-3 text-fuchsia-400" /> by SAMS-ALIF.LIVE
+            <span className="flex items-center gap-1 text-white/20 text-xs">
+                Made with <FiHeart className="w-3 h-3 text-fuchsia-400" /> in Bangladesh
             </span>
           </div>
         </div>
 
         <div className="mt-3 text-center">
-          <p className="text-[10px] text-dark-600">
-              SAMS-ALIF.LIVE &mdash; Developed and maintained by SAMS-ALIF.LIVE.
+          <p className="text-[10px] text-white/15">
+              SAMS-ALIF.LIVE — All streams from public sources. For educational purposes only.
           </p>
         </div>
       </div>

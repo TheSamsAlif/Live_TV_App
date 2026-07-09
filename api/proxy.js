@@ -3,6 +3,8 @@ export const config = { runtime: 'edge' };
 export default async function handler(req) {
   const urlObj = new URL(req.url);
   const url = urlObj.searchParams.get('url');
+  const referer = urlObj.searchParams.get('referer') || '';
+  const origin = urlObj.searchParams.get('origin') || '';
 
   if (!url) {
     return new Response(JSON.stringify({ error: 'url parameter is required' }), {
@@ -24,14 +26,26 @@ export default async function handler(req) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
+    const headers = {
+      'User-Agent': UA,
+      'Accept': '*/*',
+    };
+    
+    if (referer) {
+      headers['Referer'] = referer;
+    } else {
+      headers['Referer'] = urlObj.origin;
+    }
+    
+    if (origin) {
+      headers['Origin'] = origin;
+    } else {
+      headers['Origin'] = urlObj.origin;
+    }
+
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        'User-Agent': UA,
-        'Accept': '*/*',
-        'Origin': new URL(req.url).origin,
-        'Referer': req.url,
-      },
+      headers,
     });
     clearTimeout(timeoutId);
 
@@ -59,11 +73,24 @@ export default async function handler(req) {
         if (!match || match.startsWith('#')) return match;
         try {
           const resolved = match.startsWith('http') ? match : new URL(match, baseUrl).href;
-          return `/api/proxy?url=${encodeURIComponent(resolved)}`;
+          let proxyUrl = `/api/proxy?url=${encodeURIComponent(resolved)}`;
+          if (referer) proxyUrl += `&referer=${encodeURIComponent(referer)}`;
+          if (origin) proxyUrl += `&origin=${encodeURIComponent(origin)}`;
+          return proxyUrl;
         } catch {
           return match;
         }
       });
+      
+      text = text.replace(/^(#EXT-X-KEY:.*?URI=")([^"]+)(".*)$/gm, (match, prefix, uri, suffix) => {
+        try {
+          const resolved = uri.startsWith('http') ? uri : new URL(uri, baseUrl).href;
+          return `${prefix}/api/proxy?url=${encodeURIComponent(resolved)}${suffix}`;
+        } catch {
+          return match;
+        }
+      });
+      
       return new Response(text, {
         status: 200,
         headers: { ...corsHeaders, 'content-type': 'application/vnd.apple.mpegurl', 'cache-control': 'no-cache' },
@@ -76,7 +103,7 @@ export default async function handler(req) {
       headers: { ...corsHeaders, 'content-type': contentType.split(';')[0] || 'application/octet-stream', 'cache-control': 'public, max-age=3600' },
     });
   } catch (err) {
-    const msg = err.name === 'AbortError' ? 'Source timed out (15s)' : err.message;
+    const msg = err.name === 'AbortError' ? 'Source timed out (30s)' : err.message;
     return new Response(JSON.stringify({ error: `Cannot reach source: ${msg}` }), {
       status: 502,
       headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' },

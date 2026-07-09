@@ -1,5 +1,5 @@
 import { useApp } from '../context/AppContext';
-import { FiSearch, FiGithub, FiMaximize, FiMinimize, FiMenu, FiX } from 'react-icons/fi';
+import { FiSearch, FiGithub, FiMaximize, FiMinimize, FiMenu, FiX, FiTv } from 'react-icons/fi';
 import { useState, useEffect, useCallback } from 'react';
 
 export default function Navbar({ sidebarOpen }) {
@@ -28,7 +28,7 @@ export default function Navbar({ sidebarOpen }) {
   }, []);
 
   return (
-    <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'glass shadow-lg' : 'bg-transparent'}`}>
+    <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'glass-strong shadow-lg' : 'bg-transparent'}`}>
       <div className="flex items-center justify-between px-4 h-14">
         <div className="flex items-center gap-3">
           <button
@@ -40,16 +40,19 @@ export default function Navbar({ sidebarOpen }) {
           </button>
 
           <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 via-fuchsia-500 to-amber-300 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-fuchsia-500/30 transition-shadow">
-              <span className="text-white font-black text-sm">S</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-fuchsia-500/30 transition-all duration-300 group-hover:scale-105">
+              <FiTv className="text-white" size={18} />
             </div>
-            <span className="text-white font-semibold text-sm hidden sm:block">SAMS-ALIF.LIVE</span>
+            <div className="hidden sm:block">
+              <span className="text-white font-bold text-sm tracking-tight">SAMS ALIF</span>
+              <span className="text-white/40 font-light text-sm"> LIVE</span>
+            </div>
           </a>
         </div>
 
         <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
           <div className="relative w-full">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
             <input
               type="text"
               placeholder="Search channels..."
@@ -88,7 +91,7 @@ export default function Navbar({ sidebarOpen }) {
       {showSearch && (
         <div className="md:hidden px-4 pb-3 animate-slide-up">
           <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
             <input
               type="text"
               placeholder="Search channels..."
