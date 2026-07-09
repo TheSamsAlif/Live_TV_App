@@ -127,25 +127,31 @@ export function AppProvider({ children }) {
 
     let allChannels = [];
 
-    // Load from local channels.json (pre-built from m3u + JSON sources)
-    try {
-      const res = await fetch('/channels.json');
-      if (res.ok) {
-        const data = await res.json();
-        allChannels = data.map((ch, idx) => ({
+    // Load from local channel parts (pre-built from m3u + JSON sources)
+    const channelParts = ['/channels_part1.json', '/channels_part2.json', '/channels_part3.json', '/channels_part4.json', '/channels_part5.json', '/channels_part6.json', '/channels_part7.json', '/channels_part8.json'];
+    const partResults = await Promise.allSettled(
+      channelParts.map(async (url) => {
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        return res.json();
+      })
+    );
+    
+    for (const result of partResults) {
+      if (result.status === 'fulfilled' && Array.isArray(result.value)) {
+        const partChannels = result.value.map((ch, idx) => ({
           id: `ch-${idx}-${Math.random().toString(36).slice(2, 7)}`,
-          name: ch.name || 'Unknown',
-          logo: ch.logo || '',
-          group: ch.group || 'Other',
-          url: ch.url || '',
-          type: ch.type || 'stream',
-          useProxy: ch.useProxy || false,
-          referer: ch.referer || '',
-          origin: ch.origin || '',
+          name: ch.n || ch.name || 'Unknown',
+          logo: ch.l || ch.logo || '',
+          group: ch.g || ch.group || 'Other',
+          url: ch.u || ch.url || '',
+          type: ch.t || ch.type || 'stream',
+          useProxy: ch.p || ch.useProxy || false,
+          referer: ch.r || ch.referer || '',
+          origin: ch.o || ch.origin || '',
         }));
+        allChannels = [...allChannels, ...partChannels];
       }
-    } catch (err) {
-      console.error('Failed to load channels.json:', err);
     }
 
     // Also load external links
