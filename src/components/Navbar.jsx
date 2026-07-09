@@ -1,108 +1,68 @@
 import { useApp } from '../context/AppContext';
-import { FiSearch, FiGithub, FiMaximize, FiMinimize, FiMenu, FiX, FiTv } from 'react-icons/fi';
+import { FiSearch, FiGithub, FiMaximize, FiMinimize, FiTv, FiSun, FiMoon } from 'react-icons/fi';
 import { useState, useEffect, useCallback } from 'react';
 
-export default function Navbar({ sidebarOpen }) {
-  const { searchQuery, setSearch, toggleSidebar } = useApp();
-  const [scrolled, setScrolled] = useState(false);
+export default function Navbar() {
+  const { searchQuery, setSearch } = useApp();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
 
   useEffect(() => {
-    function handleScroll() { setScrolled(window.scrollY > 20); }
     function handleFS() { setIsFullscreen(!!document.fullscreenElement); }
-    window.addEventListener('scroll', handleScroll);
     document.addEventListener('fullscreenchange', handleFS);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('fullscreenchange', handleFS);
-    };
+    return () => document.removeEventListener('fullscreenchange', handleFS);
   }, []);
 
-  const handleToggleFullscreen = useCallback(() => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    } else {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else document.documentElement.requestFullscreen().catch(() => {});
+  }, []);
+
+  const toggleDark = useCallback(() => {
+    const next = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', next);
+    try { localStorage.setItem('samsalif_theme', next ? 'dark' : 'light'); } catch {}
+    setIsDark(next);
   }, []);
 
   return (
-    <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'glass-strong shadow-lg' : 'bg-transparent'}`}>
-      <div className="flex items-center justify-between px-4 h-14">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleSidebar}
-            className="btn-ghost lg:hidden"
-            aria-label="Toggle sidebar"
-          >
-            {sidebarOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
-          </button>
+    <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0b1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 px-3 sm:px-4 h-14">
+        <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm">
+            <FiTv className="text-white" size={18} />
+          </div>
+          <div className="hidden sm:block leading-tight">
+            <span className="block text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">SAMS ALIF</span>
+            <span className="block text-[10px] font-medium text-blue-600">LIVE TV</span>
+          </div>
+        </a>
 
-          <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-fuchsia-500/30 transition-all duration-300 group-hover:scale-105">
-              <FiTv className="text-white" size={18} />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-white font-bold text-sm tracking-tight">SAMS ALIF</span>
-              <span className="text-white/40 font-light text-sm"> LIVE</span>
-            </div>
-          </a>
-        </div>
-
-        <div className="hidden md:flex items-center flex-1 max-w-md mx-4">
+        <div className="flex items-center flex-1 max-w-lg">
           <div className="relative w-full">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search channels..."
               value={searchQuery}
               onChange={(e) => setSearch(e.target.value)}
-              className="search-input pl-10"
+              className="search-input"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => setShowSearch(!showSearch)}
-            className="btn-ghost md:hidden"
-            aria-label="Search"
-          >
-            <FiSearch className="w-5 h-5" />
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <button onClick={toggleDark} className="btn-ghost" aria-label="Theme">
+            {isDark ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
           </button>
-
-          <a
-            href="https://github.com/TheSamsAlif/Live_TV_App"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-ghost"
-            aria-label="GitHub"
-          >
+          <a href="https://github.com/TheSamsAlif/Live_TV_App" target="_blank" rel="noopener noreferrer" className="btn-ghost hidden sm:flex" aria-label="GitHub">
             <FiGithub className="w-5 h-5" />
           </a>
-
-          <button onClick={handleToggleFullscreen} className="btn-ghost hidden sm:flex" aria-label="Fullscreen">
+          <button onClick={toggleFullscreen} className="btn-ghost hidden sm:flex" aria-label="Fullscreen">
             {isFullscreen ? <FiMinimize className="w-5 h-5" /> : <FiMaximize className="w-5 h-5" />}
           </button>
         </div>
       </div>
-
-      {showSearch && (
-        <div className="md:hidden px-4 pb-3 animate-slide-up">
-          <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-            <input
-              type="text"
-              placeholder="Search channels..."
-              value={searchQuery}
-              onChange={(e) => setSearch(e.target.value)}
-              className="search-input pl-10"
-              autoFocus
-            />
-          </div>
-        </div>
-      )}
     </header>
   );
 }

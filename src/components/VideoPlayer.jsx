@@ -4,15 +4,15 @@ import { useHlsPlayer } from '../hooks/useHlsPlayer';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import {
   FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiMinimize,
-  FiCommand, FiAlertTriangle, FiRefreshCw, FiArrowLeft
+  FiAlertTriangle, FiRefreshCw, FiArrowLeft, FiX
 } from 'react-icons/fi';
 import { RiPictureInPictureLine, RiPictureInPictureFill } from 'react-icons/ri';
 
 const FALLBACK_LOGO = 'data:image/svg+xml,' + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#1a1a2e"/><text x="20" y="24" text-anchor="middle" fill="#06b6d4" font-size="14" font-family="system-ui" font-weight="bold">TV</text></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#1e293b"/><text x="20" y="24" text-anchor="middle" fill="#3b82f6" font-size="14" font-family="system-ui" font-weight="bold">TV</text></svg>'
 );
 
-export default function VideoPlayer({ onBack }) {
+export default function VideoPlayer() {
   const { currentChannel, volume, isMuted, setVolume, setMuted, setCurrentChannel } = useApp();
   const videoRef = useRef(null);
   const containerRef = useRef(null);
@@ -28,17 +28,8 @@ export default function VideoPlayer({ onBack }) {
   function handleTogglePlay() {
     const video = videoRef.current;
     if (!video) return;
-    if (video.paused) {
-      video.play().catch(() => {});
-      setIsPlaying(true);
-    } else {
-      video.pause();
-      setIsPlaying(false);
-    }
-  }
-
-  function handleToggleMute() {
-    setMuted(!isMuted);
+    if (video.paused) { video.play().catch(() => {}); setIsPlaying(true); }
+    else { video.pause(); setIsPlaying(false); }
   }
 
   function handleVolumeChange(e) {
@@ -50,22 +41,16 @@ export default function VideoPlayer({ onBack }) {
 
   function handleToggleFullscreen() {
     if (!containerRef.current) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    } else {
-      containerRef.current.requestFullscreen().catch(() => {});
-    }
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else containerRef.current.requestFullscreen().catch(() => {});
   }
 
   async function handleTogglePiP() {
     const video = videoRef.current;
     if (!video) return;
     try {
-      if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture();
-      } else {
-        await video.requestPictureInPicture();
-      }
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else await video.requestPictureInPicture();
     } catch { /* PiP not supported */ }
   }
 
@@ -75,99 +60,57 @@ export default function VideoPlayer({ onBack }) {
     hideTimerRef.current = setTimeout(() => setShowControls(false), 3000);
   }
 
+  const handleBack = useCallback(() => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    setCurrentChannel(null);
+  }, [setCurrentChannel]);
+
   useEffect(() => {
-    function onFullscreenChange() {
-      setIsFullscreen(!!document.fullscreenElement);
-    }
-    function onPiPChange() {
-      setIsPiP(!!document.pictureInPictureElement);
-    }
+    function onFullscreenChange() { setIsFullscreen(!!document.fullscreenElement); }
     document.addEventListener('fullscreenchange', onFullscreenChange);
-    videoRef.current?.addEventListener('enterpictureinpicture', onPiPChange);
-    videoRef.current?.addEventListener('leavepictureinpicture', onPiPChange);
+    const v = videoRef.current;
+    const onPiP = () => setIsPiP(!!document.pictureInPictureElement);
+    v?.addEventListener('enterpictureinpicture', onPiP);
+    v?.addEventListener('leavepictureinpicture', onPiP);
     return () => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
+      v?.removeEventListener('enterpictureinpicture', onPiP);
+      v?.removeEventListener('leavepictureinpicture', onPiP);
     };
   }, []);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.volume = isMuted ? 0 : volume;
-    }
+    if (videoRef.current) videoRef.current.volume = isMuted ? 0 : volume;
   }, [volume, isMuted]);
 
   useKeyboardShortcuts({
     onTogglePlay: handleTogglePlay,
-    onToggleMute: handleToggleMute,
+    onToggleMute: () => setMuted(!isMuted),
     onToggleFullscreen: handleToggleFullscreen,
     onVolumeUp: () => setVolume(Math.min(1, volume + 0.1)),
     onVolumeDown: () => setVolume(Math.max(0, volume - 0.1)),
-    onExitFullscreen: () => { if (document.fullscreenElement) document.exitFullscreen(); },
+    onExitFullscreen: () => { if (document.fullscreenElement) document.exitFullscreen(); else handleBack(); },
   });
-
-  const handleCopyUrl = useCallback(() => {
-    if (currentChannel?.url) {
-      navigator.clipboard.writeText(currentChannel.url).then(() => {
-        const toast = document.createElement('div');
-        toast.className = 'fixed bottom-4 right-4 glass-strong px-4 py-2 rounded-lg text-sm text-white z-50 animate-slide-up';
-        toast.textContent = 'Stream URL copied to clipboard!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
-      });
-    }
-  }, [currentChannel]);
-
-  const handleShare = useCallback(() => {
-    if (navigator.share && currentChannel) {
-      navigator.share({ title: currentChannel.name, text: `Watch ${currentChannel.name} live!`, url: window.location.href }).catch(() => {});
-    } else {
-      handleCopyUrl();
-    }
-  }, [currentChannel, handleCopyUrl]);
-
-  const handleBack = useCallback(() => {
-    setCurrentChannel(null);
-  }, [setCurrentChannel]);
 
   if (!currentChannel) return null;
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="flex flex-col lg:flex-row gap-3 animate-fade-in">
       <div
         ref={containerRef}
-        className="player-container group"
+        className="player-container group lg:flex-1 lg:max-w-4xl"
         onMouseMove={handleShowControls}
         onMouseLeave={() => setShowControls(false)}
       >
-        <video
-          ref={videoRef}
-          className="w-full h-full object-contain bg-black"
-          onClick={handleTogglePlay}
-          playsInline
-          preload="auto"
-        />
+        <video ref={videoRef} className="w-full h-full object-contain bg-black" onClick={handleTogglePlay} playsInline preload="auto" />
 
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
-            <div className="flex flex-col items-center gap-4">
-              <div className="relative w-14 h-14">
-                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="url(#grad)" strokeWidth="2"
-                    strokeDasharray={`${loadProgress}, 100`} strokeLinecap="round" className="transition-all duration-700" />
-                  <defs>
-                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#06b6d4" />
-                      <stop offset="50%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="#d946ef" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-                </div>
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative w-12 h-12">
+                <div className="w-12 h-12 border-3 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
               </div>
-              <p className="text-white/50 text-xs tracking-wider uppercase">
+              <p className="text-white/60 text-xs tracking-wider uppercase">
                 {loadProgress < 30 ? 'Connecting...' : loadProgress < 70 ? 'Buffering...' : 'Starting...'}
               </p>
             </div>
@@ -176,90 +119,64 @@ export default function VideoPlayer({ onBack }) {
 
         {error && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/85 z-10">
-            <div className="flex flex-col items-center gap-5 text-center px-8 max-w-md">
-              <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-                <FiAlertTriangle className="w-8 h-8 text-red-400" />
+            <div className="flex flex-col items-center gap-4 text-center px-6 max-w-md">
+              <div className="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                <FiAlertTriangle className="w-7 h-7 text-red-400" />
               </div>
               <div>
-                <p className="text-white font-semibold text-lg mb-1">Stream Unavailable</p>
-                <p className="text-white/40 text-xs mb-4 font-mono truncate max-w-full">{currentChannel.name}</p>
-                <p className="text-red-300/70 text-sm leading-relaxed">
-                  {error}. The source may be offline or restricted in your region.
-                </p>
+                <p className="text-white font-semibold mb-1">Stream Unavailable</p>
+                <p className="text-white/40 text-xs mb-3 font-mono truncate max-w-full">{currentChannel.name}</p>
+                <p className="text-red-300/70 text-sm">This source may be offline or geo-restricted.</p>
               </div>
               <div className="flex items-center gap-3">
-                <button onClick={retry} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-500/20 border border-cyan-400/30 text-cyan-300 hover:from-cyan-500/30 hover:to-violet-500/30 transition-all text-sm font-medium">
-                  <FiRefreshCw className="w-4 h-4" />
-                  Retry Now
+                <button onClick={retry} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all text-sm font-medium">
+                  <FiRefreshCw className="w-4 h-4" /> Retry
                 </button>
-                <button onClick={handleBack} className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white/80 hover:bg-white/10 transition-all text-sm">
-                  Back
-                </button>
+                <button onClick={handleBack} className="px-4 py-2.5 rounded-xl bg-white/10 text-white/70 hover:bg-white/20 transition-all text-sm">Back</button>
               </div>
             </div>
           </div>
         )}
+
         {!isLoading && !error && !isPlaying && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 cursor-pointer" onClick={handleTogglePlay}>
-            <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+            <div className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center hover:bg-white/25 transition-all">
               <FiPlay className="w-7 h-7 text-white ml-1" />
             </div>
           </div>
         )}
 
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <div className="absolute top-4 left-4 right-4 flex items-center gap-3">
-            <button onClick={handleBack} className="btn-ghost text-white hover:bg-white/10">
-              <FiArrowLeft className="w-5 h-5" />
+        {/* Top bar with working Back button */}
+        <div className={`absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent p-3 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className="flex items-center gap-2">
+            <button onClick={handleBack} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/40 text-white hover:bg-black/60 transition-all text-sm">
+              <FiArrowLeft className="w-4 h-4" /> Back
             </button>
-            <span className="live-badge">
-              <span className="live-badge-dot" />
-              LIVE
-            </span>
-            <span className="text-white text-sm font-medium truncate text-shadow">
-              {currentChannel.name}
-            </span>
+            <span className="live-badge"><span className="live-badge-dot" /> LIVE</span>
+            <span className="text-white text-sm font-medium truncate text-shadow">{currentChannel.name}</span>
           </div>
         </div>
 
-        <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-12 pb-4 px-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-          <div className="flex items-center gap-3">
+        {/* Bottom controls */}
+        <div className={`absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent pt-10 pb-3 px-3 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className="flex items-center gap-2">
             <button onClick={handleTogglePlay} className="btn-ghost text-white hover:bg-white/10">
               {isPlaying ? <FiPause className="w-5 h-5" /> : <FiPlay className="w-5 h-5" />}
             </button>
-
-            <div className="relative flex items-center"
-              onMouseEnter={() => setShowVolume(true)}
-              onMouseLeave={() => setShowVolume(false)}
-            >
-              <button onClick={handleToggleMute} className="btn-ghost text-white hover:bg-white/10">
+            <div className="relative flex items-center" onMouseEnter={() => setShowVolume(true)} onMouseLeave={() => setShowVolume(false)}>
+              <button onClick={() => setMuted(!isMuted)} className="btn-ghost text-white hover:bg-white/10">
                 {isMuted || volume === 0 ? <FiVolumeX className="w-5 h-5" /> : <FiVolume2 className="w-5 h-5" />}
               </button>
-              <div className={`flex items-center transition-all duration-200 overflow-hidden ${showVolume ? 'w-24 ml-1' : 'w-0 ml-0'}`}>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={isMuted ? 0 : volume}
-                  onChange={handleVolumeChange}
-                  className="w-full h-1 accent-cyan-500 cursor-pointer"
-                />
+              <div className={`flex items-center transition-all duration-200 overflow-hidden ${showVolume ? 'w-20 ml-1' : 'w-0'}`}>
+                <input type="range" min="0" max="1" step="0.05" value={isMuted ? 0 : volume} onChange={handleVolumeChange} className="w-full h-1 accent-blue-500 cursor-pointer" />
               </div>
             </div>
-
             <div className="flex-1" />
-
-            <button onClick={handleCopyUrl} className="btn-ghost text-white hover:bg-white/10" title="Copy Stream URL">
-              <FiCommand className="w-4 h-4" />
-            </button>
-
             {document.pictureInPictureEnabled && (
               <button onClick={handleTogglePiP} className="btn-ghost text-white hover:bg-white/10" title="Picture in Picture">
                 {isPiP ? <RiPictureInPictureFill className="w-4 h-4" /> : <RiPictureInPictureLine className="w-4 h-4" />}
               </button>
             )}
-
             <button onClick={handleToggleFullscreen} className="btn-ghost text-white hover:bg-white/10" title="Fullscreen">
               {isFullscreen ? <FiMinimize className="w-4 h-4" /> : <FiMaximize className="w-4 h-4" />}
             </button>
@@ -267,29 +184,22 @@ export default function VideoPlayer({ onBack }) {
         </div>
       </div>
 
-      <div className="glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
+      {/* Info card beside player on desktop */}
+      <div className="card p-4 flex lg:flex-col items-center lg:items-start justify-between gap-3 lg:w-64 flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
-          <img
-            src={currentChannel.logo || FALLBACK_LOGO}
-            alt={currentChannel.name}
-            className="w-12 h-12 rounded-xl object-cover bg-slate-800 flex-shrink-0 ring-1 ring-white/10"
-            onError={(e) => { e.target.src = FALLBACK_LOGO; }}
-          />
+          <img src={currentChannel.logo || FALLBACK_LOGO} alt={currentChannel.name}
+            className="w-11 h-11 rounded-lg object-cover bg-slate-800 flex-shrink-0"
+            onError={(e) => { e.target.src = FALLBACK_LOGO; }} />
           <div className="min-w-0">
-            <h2 className="text-lg font-bold text-white truncate">{currentChannel.name}</h2>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-cyan-600/20 text-cyan-400 border border-cyan-500/20">
+            <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">{currentChannel.name}</h2>
+            <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-medium rounded-full bg-blue-100 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400">
               {currentChannel.group}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={handleCopyUrl} className="btn-ghost text-sm flex items-center gap-1.5">
-            <FiCommand className="w-4 h-4" /> Copy URL
-          </button>
-          <button onClick={handleShare} className="btn-primary text-sm flex items-center gap-1.5">
-            Share
-          </button>
-        </div>
+        <button onClick={handleBack} className="btn-primary text-sm flex-shrink-0 lg:w-full justify-center">
+          <FiX className="w-4 h-4" /> Close Player
+        </button>
       </div>
     </div>
   );
