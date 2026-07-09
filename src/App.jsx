@@ -165,7 +165,7 @@ function App() {
         )}
 
         {/* Category chips */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-2">
+        <div className="chip-bar flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-2">
           <button
             onClick={toggleFavorites}
             className={`chip flex items-center gap-1.5 ${showFavorites ? 'active' : ''}`}

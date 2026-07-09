@@ -26,7 +26,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0b1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <header className="site-nav sticky top-0 z-40 bg-white/80 dark:bg-[#0b1120]/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 px-3 sm:px-4 h-14">
         <a href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
           <div className="logo-mark">

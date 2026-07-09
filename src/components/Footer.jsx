@@ -2,7 +2,7 @@ import { FiGithub, FiHeart } from 'react-icons/fi';
 
 export default function Footer({ channelCount }) {
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800 mt-8">
+    <footer className="site-footer relative border-t border-slate-200 dark:border-slate-800 mt-8">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs">
@@ -17,7 +17,7 @@ export default function Footer({ channelCount }) {
               <FiGithub className="w-3.5 h-3.5" /> GitHub
             </a>
             <span className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-xs">
-              Made with <FiHeart className="w-3 h-3 text-red-500" /> in Bangladesh
+              Made with <FiHeart className="w-3 h-3 text-red-500 animate-heart" fill="currentColor" /> in Bangladesh
             </span>
           </div>
         </div>
