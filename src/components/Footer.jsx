@@ -7,14 +7,14 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-dark-500 text-xs">
             <span>Developed by</span>
-            <a
-              href="https://github.com/TheSamsAlif/Live_TV_App"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-400 hover:text-primary-300 transition-colors font-medium"
-            >
-              Sams Alif
-            </a>
+              <a
+                href="https://github.com/TheSamsAlif/Live_TV_App"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-300 hover:text-fuchsia-300 transition-colors font-medium"
+              >
+                SAMS-ALIF.LIVE
+              </a>
             <span className="mx-1">© {new Date().getFullYear()}</span>
           </div>
 
@@ -29,14 +29,14 @@ export default function Footer() {
               GitHub
             </a>
             <span className="flex items-center gap-1 text-dark-600 text-xs">
-              Made with <FiHeart className="w-3 h-3 text-red-500" /> by Sams Alif
+                Made with <FiHeart className="w-3 h-3 text-fuchsia-400" /> by SAMS-ALIF.LIVE
             </span>
           </div>
         </div>
 
         <div className="mt-3 text-center">
           <p className="text-[10px] text-dark-600">
-            SamsAlif Live TV &mdash; Developed and maintained by Sams Alif.
+              SAMS-ALIF.LIVE &mdash; Developed and maintained by SAMS-ALIF.LIVE.
           </p>
         </div>
       </div>

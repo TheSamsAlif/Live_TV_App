@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fi';
 import { RiPictureInPictureLine, RiPictureInPictureFill } from 'react-icons/ri';
 
-export default function VideoPlayer() {
+export default function VideoPlayer({ onBack }) {
   const { currentChannel, volume, isMuted, setVolume, setMuted } = useApp();
   const videoRef = useRef(null);
   const containerRef = useRef(null);
@@ -19,7 +19,7 @@ export default function VideoPlayer() {
   const [isPiP, setIsPiP] = useState(false);
   const [showVolume, setShowVolume] = useState(false);
 
-  const { isLoading, error, retry } = useHlsPlayer(videoRef, currentChannel?.url);
+  const { isLoading, error, retry, loadProgress } = useHlsPlayer(videoRef, currentChannel?.url);
 
   function handleTogglePlay() {
     const video = videoRef.current;
@@ -140,26 +140,60 @@ export default function VideoPlayer() {
         />
 
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 border-4 border-dark-600 border-t-primary-500 rounded-full animate-spin" />
-              <p className="text-dark-400 text-sm">Loading stream...</p>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative w-14 h-14">
+                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="url(#grad)" strokeWidth="2"
+                    strokeDasharray={`${loadProgress}, 100`} strokeLinecap="round" className="transition-all duration-700" />
+                  <defs>
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#06b6d4" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                </div>
+              </div>
+              <p className="text-white/50 text-xs tracking-wider uppercase">
+                {loadProgress < 30 ? 'Connecting...' : loadProgress < 70 ? 'Buffering...' : 'Starting...'}
+              </p>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
-            <div className="flex flex-col items-center gap-4 text-center px-6">
-              <FiAlertTriangle className="w-10 h-10 text-red-400" />
-              <div>
-                <p className="text-white font-medium mb-1">Playback Error</p>
-                <p className="text-dark-400 text-sm">{error}</p>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/85 z-10">
+            <div className="flex flex-col items-center gap-5 text-center px-8 max-w-md">
+              <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                <FiAlertTriangle className="w-8 h-8 text-red-400" />
               </div>
-              <button onClick={retry} className="btn-primary flex items-center gap-2">
-                <FiRefreshCw className="w-4 h-4" />
-                Retry
-              </button>
+              <div>
+                <p className="text-white font-semibold text-lg mb-1">Stream Unavailable</p>
+                <p className="text-white/40 text-xs mb-4 font-mono truncate max-w-full">{currentChannel.name}</p>
+                <p className="text-red-300/70 text-sm leading-relaxed">
+                  {error}. The source may be offline or restricted in your region.
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button onClick={retry} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-fuchsia-500/20 border border-cyan-400/30 text-cyan-300 hover:from-cyan-500/30 hover:to-fuchsia-500/30 transition-all text-sm font-medium">
+                  <FiRefreshCw className="w-4 h-4" />
+                  Retry Now
+                </button>
+                <button onClick={onBack} className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white/80 hover:bg-white/10 transition-all text-sm">
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {!isLoading && !error && !isPlaying && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 cursor-pointer" onClick={handleTogglePlay}>
+            <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+              <FiPlay className="w-7 h-7 text-white ml-1" />
             </div>
           </div>
         )}

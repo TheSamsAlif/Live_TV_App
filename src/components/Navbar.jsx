@@ -40,10 +40,10 @@ export default function Navbar({ sidebarOpen }) {
           </button>
 
           <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow">
-              <span className="text-white font-bold text-sm">SA</span>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 via-fuchsia-500 to-amber-300 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-fuchsia-500/30 transition-shadow">
+              <span className="text-white font-black text-sm">S</span>
             </div>
-            <span className="text-white font-semibold text-sm hidden sm:block">SamsAlif Live TV</span>
+            <span className="text-white font-semibold text-sm hidden sm:block">SAMS-ALIF.LIVE</span>
           </a>
         </div>
 

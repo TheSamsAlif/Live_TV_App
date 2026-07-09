@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react';
-import { parseM3U } from '../utils/parseM3U';
 
 const AppContext = createContext();
 
@@ -23,7 +22,7 @@ function loadFromStorage(key, defaultValue) {
 function saveToStorage(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch { /* storage full or unavailable */ }
+  } catch {}
 }
 
 const initialState = {
@@ -47,7 +46,7 @@ function appReducer(state, action) {
   switch (action.type) {
     case 'SET_CHANNELS': {
       const channels = action.payload;
-      const groups = ['All', ...new Set(channels.map((ch) => ch.group))].sort();
+      const groups = ['All', ...new Set(channels.map((ch) => ch.group).filter(Boolean))].sort();
       return { ...state, channels, groups, filteredChannels: channels, isLoading: false };
     }
     case 'SET_ERROR':
@@ -118,32 +117,45 @@ function appReducer(state, action) {
   }
 }
 
+const JSON_SOURCES = [
+  { url: 'https://tv.shajon.dev/playlist/bangla.json', fallbackGroup: 'Bangla' },
+  { url: 'https://tv.shajon.dev/playlist/channels.json', fallbackGroup: 'International' },
+  { url: 'https://tv.shajon.dev/playlist/fifa.json', fallbackGroup: 'FIFA' },
+  { url: 'https://tv.shajon.dev/playlist/sports.json', fallbackGroup: 'Sports' },
+];
+
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const loadedRef = useRef(false);
-
-  const PLAYLIST_SOURCES = [
-    'https://raw.githubusercontent.com/imShakil/tvlink/refs/heads/main/iptv.m3u8',
-    '/playlist.m3u',
-  ];
 
   const loadPlaylist = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     dispatch({ type: 'SET_ERROR', payload: null });
 
     let allChannels = [];
-    for (const source of PLAYLIST_SOURCES) {
-      try {
-        const response = await fetch(source);
-        if (!response.ok) continue;
-        const text = await response.text();
-        if (!text.trim()) continue;
-        const channels = parseM3U(text);
-        allChannels = [...allChannels, ...channels.map(c => ({ ...c, type: 'stream' }))];
-      } catch { /* skip */ }
+
+    const results = await Promise.allSettled(
+      JSON_SOURCES.map(async (source) => {
+        const response = await fetch(source.url);
+        if (!response.ok) return [];
+        const data = await response.json();
+        return data.map((ch, idx) => ({
+          id: `ch-${idx}-${Math.random().toString(36).slice(2, 7)}`,
+          name: ch.name || ch.channel || 'Unknown',
+          logo: ch.logo || ch.logo_url || '',
+          group: ch.group || source.fallbackGroup,
+          url: ch.url || ch.stream_url || ch.link || '',
+          type: 'stream',
+        }));
+      })
+    );
+
+    for (const result of results) {
+      if (result.status === 'fulfilled' && Array.isArray(result.value)) {
+        allChannels = [...allChannels, ...result.value];
+      }
     }
 
-    // Load external links
     try {
       const linkRes = await fetch('/links.json');
       if (linkRes.ok) {
@@ -152,21 +164,22 @@ export function AppProvider({ children }) {
           id: `link-${i}`,
           name: link.name,
           logo: link.logo || '',
-          group: link.group || 'Uncategorized',
+          group: link.group || 'External Links',
           url: link.url,
           type: 'link',
         }));
         allChannels = [...allChannels, ...linkChannels];
       }
-    } catch { /* skip */ }
+    } catch {}
 
     if (allChannels.length === 0) {
-      dispatch({ type: 'SET_ERROR', payload: 'No channels found in any playlist source' });
+      dispatch({ type: 'SET_ERROR', payload: 'No channels found. Check your internet connection.' });
       return;
     }
 
     const seen = new Set();
     const unique = allChannels.filter((ch) => {
+      if (!ch.url) return false;
       const key = ch.name + ch.url;
       if (seen.has(key)) return false;
       seen.add(key);
@@ -190,51 +203,35 @@ export function AppProvider({ children }) {
   const setCurrentChannel = useCallback((channel) => {
     dispatch({ type: 'SET_CURRENT_CHANNEL', payload: channel });
   }, []);
-
   const setSearch = useCallback((query) => {
     dispatch({ type: 'SET_SEARCH', payload: query });
   }, []);
-
   const setGroup = useCallback((group) => {
     dispatch({ type: 'SET_GROUP', payload: group });
   }, []);
-
   const toggleFavorite = useCallback((id) => {
     dispatch({ type: 'TOGGLE_FAVORITE', payload: id });
   }, []);
-
   const setVolume = useCallback((vol) => {
     dispatch({ type: 'SET_VOLUME', payload: vol });
   }, []);
-
   const setMuted = useCallback((muted) => {
     dispatch({ type: 'SET_MUTED', payload: muted });
   }, []);
-
   const toggleSidebar = useCallback(() => {
     dispatch({ type: 'TOGGLE_SIDEBAR' });
   }, []);
-
   const toggleFavorites = useCallback(() => {
     dispatch({ type: 'TOGGLE_FAVORITES' });
   }, []);
-
   const showAll = useCallback(() => {
     dispatch({ type: 'SHOW_ALL' });
   }, []);
 
   const value = {
     ...state,
-    setCurrentChannel,
-    setSearch,
-    setGroup,
-    toggleFavorite,
-    setVolume,
-    setMuted,
-    toggleSidebar,
-    toggleFavorites,
-    showAll,
-    loadPlaylist,
+    setCurrentChannel, setSearch, setGroup, toggleFavorite,
+    setVolume, setMuted, toggleSidebar, toggleFavorites, showAll, loadPlaylist,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

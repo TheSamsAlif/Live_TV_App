@@ -1,11 +1,11 @@
 {
-  "name": "SamsAlif Live TV",
-  "short_name": "Live TV",
-  "description": "Watch live TV channels from around the world.",
+  "name": "SAMS-ALIF.LIVE",
+  "short_name": "SAMS-LIVE",
+  "description": "Watch live TV channels with a vivid, modern interface.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a14",
-  "theme_color": "#0a0a14",
+  "background_color": "#08111f",
+  "theme_color": "#08111f",
   "icons": [
     {
       "src": "/favicon.svg",

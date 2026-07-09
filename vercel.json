@@ -3,6 +3,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/api/proxy", "destination": "/api/proxy" },
+    { "source": "/api/proxy(.*)", "destination": "/api/proxy" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
