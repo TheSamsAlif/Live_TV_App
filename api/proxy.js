@@ -24,13 +24,18 @@ export default async function handler(req) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
 
+    let targetOrigin = '';
+    try {
+      targetOrigin = new URL(url).origin;
+    } catch {}
+
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
         'User-Agent': UA,
         'Accept': '*/*',
-        'Origin': new URL(req.url).origin,
-        'Referer': req.url,
+        'Origin': targetOrigin || new URL(req.url).origin,
+        'Referer': targetOrigin ? `${targetOrigin}/` : req.url,
       },
     });
     clearTimeout(timeoutId);

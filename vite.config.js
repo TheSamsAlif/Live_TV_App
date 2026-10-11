@@ -32,13 +32,18 @@ async function handleProxyRequest(req, res, next) {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
+    let targetOrigin = '';
+    try {
+      targetOrigin = new URL(targetUrl).origin;
+    } catch {}
+
     const response = await fetch(targetUrl, {
       signal: controller.signal,
       headers: {
         'User-Agent': userAgent,
         'Accept': '*/*',
-        'Origin': requestUrl.origin,
-        'Referer': requestUrl.toString(),
+        'Origin': targetOrigin || requestUrl.origin,
+        'Referer': targetOrigin ? `${targetOrigin}/` : requestUrl.toString(),
       },
     });
     clearTimeout(timeoutId);

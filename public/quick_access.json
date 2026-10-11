@@ -1,0 +1,50 @@
+[
+  {
+    "name": "BDIPTV Live Portal",
+    "url": "http://tv.bdiptv.net/",
+    "desc": "BDIX Live TV, Sports, Cricket & Football Server",
+    "tag": "BDIX / High Speed",
+    "icon": "⚡",
+    "badge": "Popular in BD"
+  },
+  {
+    "name": "BDIPTV Live Football",
+    "url": "http://tv.bdiptv.net/play.php?stream=LIVE-FOOTBALL",
+    "desc": "Live International Football Streams",
+    "tag": "Sports",
+    "icon": "⚽",
+    "badge": "Live Match"
+  },
+  {
+    "name": "BDIPTV Live Cricket",
+    "url": "http://tv.bdiptv.net/play.php?stream=LIVE-CRICKET",
+    "desc": "Live Cricket, IPL & T20 Streams",
+    "tag": "Sports",
+    "icon": "🏏",
+    "badge": "Live Match"
+  },
+  {
+    "name": "BDIPTV T-Sports",
+    "url": "http://tv.bdiptv.net/play.php?stream=T-SPORTS",
+    "desc": "Bangladesh T-Sports Live BDIX Stream",
+    "tag": "Bangla Sports",
+    "icon": "🏆",
+    "badge": "HD"
+  },
+  {
+    "name": "BDIPTV Star Sports 1",
+    "url": "http://tv.bdiptv.net/play.php?stream=STAR-SPORTS-1",
+    "desc": "Star Sports 1 Live Cricket & Sports",
+    "tag": "Star Network",
+    "icon": "⭐",
+    "badge": "HD"
+  },
+  {
+    "name": "EzLiveTV BDIX Hub",
+    "url": "https://tv.ezshomadhan.com/",
+    "desc": "Bangladesh BDIX All Channels Portal",
+    "tag": "Live TV",
+    "icon": "📺",
+    "badge": "BDIX"
+  }
+]
