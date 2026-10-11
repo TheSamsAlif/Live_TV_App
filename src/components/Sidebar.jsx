@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ChannelList from './ChannelList';
 import SkeletonLoader from './SkeletonLoader';
-import { FiSearch, FiStar, FiX, FiList, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiSearch, FiStar, FiX, FiList, FiChevronDown, FiChevronUp, FiTv } from 'react-icons/fi';
 
 export default function Sidebar() {
   const {
@@ -12,10 +12,10 @@ export default function Sidebar() {
   const [showGroups, setShowGroups] = useState(true);
 
   return (
-    <aside className="flex flex-col h-full bg-dark-900/50">
+    <aside className="flex flex-col h-full bg-transparent">
       <div className="p-3 space-y-3">
         <div className="relative">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
           <input
             type="text"
             placeholder="Search..."
@@ -26,7 +26,7 @@ export default function Sidebar() {
           {searchQuery && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-500 hover:text-dark-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60"
             >
               <FiX className="w-3.5 h-3.5" />
             </button>
@@ -39,7 +39,7 @@ export default function Sidebar() {
         >
           <FiStar className="w-4 h-4" />
           <span className="text-sm">Favorites</span>
-          <span className="ml-auto text-xs text-dark-500">
+          <span className="ml-auto text-xs text-white/30">
             {channels.length}
           </span>
         </button>
@@ -48,22 +48,22 @@ export default function Sidebar() {
       <div className="px-3">
         <button
           onClick={() => setShowGroups(!showGroups)}
-          className="flex items-center justify-between w-full py-2 text-xs font-semibold text-dark-400 uppercase tracking-wider"
+          className="flex items-center justify-between w-full py-2 text-xs font-semibold text-white/40 uppercase tracking-wider"
         >
           <span>Categories</span>
           {showGroups ? <FiChevronUp className="w-3 h-3" /> : <FiChevronDown className="w-3 h-3" />}
         </button>
 
         {showGroups && (
-          <div className="flex flex-wrap gap-1.5 pb-3 max-h-32 overflow-y-auto no-scrollbar">
-            {groups.slice(0, 30).map((group) => (
+          <div className="flex flex-wrap gap-1.5 pb-3 max-h-40 overflow-y-auto no-scrollbar">
+            {groups.slice(0, 50).map((group) => (
               <button
                 key={group}
                 onClick={() => setGroup(group)}
                 className={`px-2.5 py-1 text-xs rounded-full transition-all duration-200 border ${
                   selectedGroup === group
-                    ? 'bg-primary-600/20 text-primary-400 border-primary-500/30'
-                    : 'text-dark-400 border-dark-600/50 hover:text-dark-200 hover:border-dark-500'
+                    ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
+                    : 'text-white/40 border-white/8 hover:text-white/70 hover:border-white/15'
                 }`}
               >
                 {group === 'All' ? (
@@ -82,7 +82,8 @@ export default function Sidebar() {
           <SkeletonLoader count={10} />
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-            <p className="text-dark-500 text-sm">Failed to load channels.</p>
+            <FiTv className="w-8 h-8 text-white/10 mb-2" />
+            <p className="text-white/30 text-sm">Failed to load channels.</p>
           </div>
         ) : (
           <ChannelList />
@@ -90,8 +91,8 @@ export default function Sidebar() {
       </div>
 
       <div className="p-3 border-t border-white/5">
-        <p className="text-[10px] text-dark-600 text-center">
-          {channels.length} channels
+        <p className="text-[10px] text-white/20 text-center">
+          {channels.length} channels available
         </p>
       </div>
     </aside>
