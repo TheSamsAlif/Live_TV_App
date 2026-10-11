@@ -30,82 +30,41 @@ const QUICK_ACCESS_ITEMS = [
     id: 'qa-bdiptv-main',
     name: 'BDIPTV Live Portal',
     url: 'http://tv.bdiptv.net/',
-    desc: 'BDIX Live TV, Cricket & Sports Hub',
+    desc: 'BDIX Live TV, Cricket & Sports Portal',
     icon: '⚡',
-    badge: 'BDIX Portal',
-    isExternal: true,
+    badge: 'Official BDIX',
   },
   {
-    id: 'qa-football',
-    name: 'Live Football',
-    url: 'http://tv.bdiptv.net/play.php?stream=LIVE-FOOTBALL',
-    desc: 'Football Matches Streaming',
+    id: 'qa-ezlivetv',
+    name: 'EzLiveTV BDIX Hub',
+    url: 'https://tv.ezshomadhan.com/',
+    desc: 'Bangladesh BDIX All Channels Hub',
+    icon: '📺',
+    badge: 'BDIX TV',
+  },
+  {
+    id: 'qa-fifa',
+    name: 'FIFA Sports Live',
+    url: 'https://fifalive.click/',
+    desc: 'Live Football & FIFA HD Match Hub',
     icon: '⚽',
     badge: 'Live Sports',
-    channel: {
-      id: 'bdiptv-live-football',
-      name: 'LIVE FOOTBALL (BDIPTV)',
-      group: 'Sports',
-      url: 'http://tv.bdiptv.net/play.php?stream=LIVE-FOOTBALL',
-      logo: 'http://tv.bdiptv.net/assets/images/LIVE-FOOTBALL.jpg',
-      type: 'bdiptv',
-      source: 'BDIPTV BDIX',
-      quality: 'HD Live',
-    },
   },
   {
-    id: 'qa-cricket',
-    name: 'Live Cricket',
-    url: 'http://tv.bdiptv.net/play.php?stream=LIVE-CRICKET',
-    desc: 'Cricket Series & T20 Live',
-    icon: '🏏',
-    badge: 'Live Sports',
-    channel: {
-      id: 'bdiptv-live-cricket',
-      name: 'LIVE CRICKET (BDIPTV)',
-      group: 'Sports',
-      url: 'http://tv.bdiptv.net/play.php?stream=LIVE-CRICKET',
-      logo: 'http://tv.bdiptv.net/assets/images/LIVE-CRICKET.jpg',
-      type: 'bdiptv',
-      source: 'BDIPTV BDIX',
-      quality: 'HD Live',
-    },
-  },
-  {
-    id: 'qa-tsports',
-    name: 'T-Sports HD',
-    url: 'http://tv.bdiptv.net/play.php?stream=T-SPORTS',
-    desc: 'Bangladesh T-Sports Live',
+    id: 'qa-eplayhd',
+    name: 'EplayHD Live Sports',
+    url: 'https://eplayhd.com/',
+    desc: 'Premier League, Cricket & F1 Live',
     icon: '🏆',
-    badge: 'BDIX Live',
-    channel: {
-      id: 'bdiptv-t-sports',
-      name: 'T-SPORTS (BDIPTV)',
-      group: 'Sports',
-      url: 'http://tv.bdiptv.net/play.php?stream=T-SPORTS',
-      logo: 'http://tv.bdiptv.net/assets/images/tsports.jpg',
-      type: 'bdiptv',
-      source: 'BDIPTV BDIX',
-      quality: 'HD Live',
-    },
+    badge: 'Sports HD',
   },
   {
-    id: 'qa-starsports',
-    name: 'Star Sports 1',
-    url: 'http://tv.bdiptv.net/play.php?stream=STAR-SPORTS-1',
-    desc: 'Star Sports 1 Live Cricket',
+    id: 'qa-tsports-portal',
+    name: 'BDIPTV Sports Hub',
+    url: 'http://tv.bdiptv.net/',
+    desc: 'T-Sports & Star Sports BDIX Portal',
     icon: '⭐',
-    badge: 'BDIX Live',
-    channel: {
-      id: 'bdiptv-star-sports-1',
-      name: 'STAR SPORTS 1 (BDIPTV)',
-      group: 'Sports',
-      url: 'http://tv.bdiptv.net/play.php?stream=STAR-SPORTS-1',
-      logo: 'http://tv.bdiptv.net/assets/images/starsports1.jpg',
-      type: 'bdiptv',
-      source: 'BDIPTV BDIX',
-      quality: 'HD Live',
-    },
+    badge: 'BDIX Sports',
   },
 ];
 
@@ -156,11 +115,7 @@ export default function App() {
 
   // Handle quick access card clicks
   function handleQuickAccessClick(item) {
-    if (item.isExternal || !item.channel) {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
-    } else {
-      handleSelectChannel(item.channel);
-    }
+    window.open(item.url, '_blank', 'noopener,noreferrer');
   }
 
   // Handle closing player modal without losing scroll position

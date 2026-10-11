@@ -5,8 +5,7 @@ import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import {
   FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiMinimize,
   FiAlertTriangle, FiRefreshCw, FiChevronLeft, FiChevronRight,
-  FiMinimize2, FiX, FiShare2, FiCheck, FiSliders, FiExternalLink,
-  FiZap, FiWifi
+  FiMinimize2, FiX, FiShare2, FiCheck, FiSliders, FiWifi
 } from 'react-icons/fi';
 import { RiPictureInPictureLine, RiPictureInPictureFill } from 'react-icons/ri';
 
@@ -37,15 +36,13 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
   const [showQualityMenu, setShowQualityMenu] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const isBDIptv = currentChannel?.type === 'bdiptv';
-
   // When error happens, auto-flag offline
   const handlePlaybackError = useCallback((streamUrl) => {
-    if (currentChannel?.id && !isBDIptv) {
+    if (currentChannel?.id) {
       console.warn(`Stream failed for channel: ${currentChannel.name}`);
       markChannelOffline(currentChannel.id);
     }
-  }, [currentChannel, isBDIptv, markChannelOffline]);
+  }, [currentChannel, markChannelOffline]);
 
   const {
     isLoading,
@@ -58,7 +55,7 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
     changeQuality,
   } = useHlsPlayer(
     videoRef,
-    !isBDIptv ? currentChannel?.url : null,
+    currentChannel?.url,
     handlePlaybackError
   );
 
@@ -174,22 +171,13 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
   if (isMini) {
     return (
       <div className="relative w-full h-full bg-black rounded-2xl overflow-hidden border border-cyan-400/40 shadow-[0_0_30px_rgba(6,182,212,0.4)] group">
-        {isBDIptv ? (
-          <iframe
-            src={currentChannel.url}
-            className="w-full h-full border-0"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            onClick={handleTogglePlay}
-            playsInline
-            preload="auto"
-          />
-        )}
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          onClick={handleTogglePlay}
+          playsInline
+          preload="auto"
+        />
 
         {/* Mini Player Overlay Header */}
         <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-20 pointer-events-auto">
@@ -216,7 +204,7 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
         </div>
 
         {/* Loading Spinner */}
-        {!isBDIptv && isLoading && (
+        {isLoading && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center">
             <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
@@ -227,11 +215,9 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
           <button onClick={playPrevChannel} className="p-1 hover:text-cyan-400" title="Previous Channel">
             <FiChevronLeft size={14} />
           </button>
-          {!isBDIptv && (
-            <button onClick={handleTogglePlay} className="p-1 hover:text-cyan-400">
-              {isPlaying ? <FiPause size={14} /> : <FiPlay size={14} />}
-            </button>
-          )}
+          <button onClick={handleTogglePlay} className="p-1 hover:text-cyan-400">
+            {isPlaying ? <FiPause size={14} /> : <FiPlay size={14} />}
+          </button>
           <button onClick={playNextChannel} className="p-1 hover:text-cyan-400" title="Next Channel">
             <FiChevronRight size={14} />
           </button>
@@ -266,7 +252,6 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
             <p className="text-[10px] text-white/40 flex items-center gap-1.5 mt-0.5 font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>CATEGORY: {currentChannel.group}</span>
-              {currentChannel.source && <span className="text-cyan-400/80">• {currentChannel.source}</span>}
               {usingFallback && <span className="text-amber-400/80">• DIRECT MODE</span>}
             </p>
           </div>
@@ -333,27 +318,16 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
         onMouseMove={handleShowControls}
         onMouseLeave={() => setShowControls(false)}
       >
-        {isBDIptv ? (
-          <div className="w-full h-full min-h-[480px] relative">
-            <iframe
-              src={currentChannel.url}
-              className="w-full h-full border-0 absolute inset-0"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <video
-            ref={videoRef}
-            className="w-full h-full object-contain max-h-[75vh]"
-            onClick={handleTogglePlay}
-            playsInline
-            preload="auto"
-          />
-        )}
+        <video
+          ref={videoRef}
+          className="w-full h-full object-contain max-h-[75vh]"
+          onClick={handleTogglePlay}
+          playsInline
+          preload="auto"
+        />
 
         {/* Loading Overlay */}
-        {!isBDIptv && isLoading && (
+        {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-md z-20">
             <div className="flex flex-col items-center gap-4">
               <div className="relative w-16 h-16">
@@ -372,7 +346,7 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
         )}
 
         {/* Error Overlay */}
-        {!isBDIptv && error && (
+        {error && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/90 backdrop-blur-xl z-20 p-6">
             <div className="max-w-md text-center flex flex-col items-center">
               <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-4">
@@ -404,7 +378,7 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
         )}
 
         {/* Play/Pause Center Button on Idle */}
-        {!isBDIptv && !isLoading && !error && !isPlaying && (
+        {!isLoading && !error && !isPlaying && (
           <div
             className="absolute inset-0 flex items-center justify-center bg-black/30 z-10 cursor-pointer"
             onClick={handleTogglePlay}
@@ -415,157 +389,140 @@ export default function VideoPlayer({ isMini = false, onClose, onToggleMini }) {
           </div>
         )}
 
-        {/* Hover Ambient Controls Overlay (for HLS streams) */}
-        {!isBDIptv && (
-          <div
-            className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent pt-16 pb-4 px-5 transition-opacity duration-300 z-10 ${
-              showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                {/* Play / Pause */}
-                <button
-                  onClick={handleTogglePlay}
-                  className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all shadow-md"
-                >
-                  {isPlaying ? <FiPause size={18} /> : <FiPlay size={18} className="fill-white" />}
-                </button>
+        {/* Hover Ambient Controls Overlay */}
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent pt-16 pb-4 px-5 transition-opacity duration-300 z-10 ${
+            showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              {/* Play / Pause */}
+              <button
+                onClick={handleTogglePlay}
+                className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all shadow-md"
+              >
+                {isPlaying ? <FiPause size={18} /> : <FiPlay size={18} className="fill-white" />}
+              </button>
 
-                {/* Prev / Next Mobile */}
-                <button onClick={playPrevChannel} className="p-2 text-white/60 hover:text-white transition-colors" title="Previous Channel">
-                  <FiChevronLeft size={20} />
-                </button>
-                <button onClick={playNextChannel} className="p-2 text-white/60 hover:text-white transition-colors" title="Next Channel">
-                  <FiChevronRight size={20} />
-                </button>
+              {/* Prev / Next Mobile */}
+              <button onClick={playPrevChannel} className="p-2 text-white/60 hover:text-white transition-colors" title="Previous Channel">
+                <FiChevronLeft size={20} />
+              </button>
+              <button onClick={playNextChannel} className="p-2 text-white/60 hover:text-white transition-colors" title="Next Channel">
+                <FiChevronRight size={20} />
+              </button>
 
-                {/* Volume */}
-                <div
-                  className="relative flex items-center"
-                  onMouseEnter={() => setShowVolume(true)}
-                  onMouseLeave={() => setShowVolume(false)}
-                >
-                  <button onClick={handleToggleMute} className="p-2 text-white/70 hover:text-white transition-colors">
-                    {isMuted || volume === 0 ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
-                  </button>
-                  <div className={`flex items-center transition-all duration-200 overflow-hidden ${showVolume ? 'w-24 ml-1' : 'w-0'}`}>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.05"
-                      value={isMuted ? 0 : volume}
-                      onChange={handleVolumeChange}
-                      className="w-full h-1.5 accent-cyan-400 cursor-pointer bg-white/20 rounded-lg"
-                    />
-                  </div>
+              {/* Volume */}
+              <div
+                className="relative flex items-center"
+                onMouseEnter={() => setShowVolume(true)}
+                onMouseLeave={() => setShowVolume(false)}
+              >
+                <button onClick={handleToggleMute} className="p-2 text-white/70 hover:text-white transition-colors">
+                  {isMuted || volume === 0 ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
+                </button>
+                <div className={`flex items-center transition-all duration-200 overflow-hidden ${showVolume ? 'w-24 ml-1' : 'w-0'}`}>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={isMuted ? 0 : volume}
+                    onChange={handleVolumeChange}
+                    className="w-full h-1.5 accent-cyan-400 cursor-pointer bg-white/20 rounded-lg"
+                  />
                 </div>
-              </div>
-
-              {/* Right Controls: Quality Selector & Actions */}
-              <div className="flex items-center gap-2">
-                {/* Playback Quality Selector (Auto, 1080p, 720p, 480p, 360p) */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowQualityMenu(!showQualityMenu)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-cyan-300 text-xs font-semibold border border-cyan-400/30 transition-all shadow-sm"
-                    title="Playback Quality / Resolution Selector"
-                  >
-                    <FiSliders size={13} />
-                    <span>{activeQualityText}</span>
-                  </button>
-
-                  {/* Quality Dropdown Menu */}
-                  {showQualityMenu && (
-                    <div className="absolute bottom-11 right-0 w-48 rounded-2xl bg-[#0e0e1e]/95 backdrop-blur-2xl border border-cyan-400/30 p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 animate-slide-up">
-                      <div className="px-3 py-1.5 text-[10px] font-bold text-white/40 uppercase tracking-wider border-b border-white/5 mb-1 flex items-center justify-between">
-                        <span>Quality / Resolution</span>
-                        <FiWifi size={11} className="text-cyan-400" />
-                      </div>
-
-                      {levels.length > 0 ? (
-                        levels.map((lvl) => {
-                          const isSelected = lvl.id === currentLevel;
-                          return (
-                            <button
-                              key={lvl.id}
-                              onClick={() => {
-                                changeQuality(lvl.id);
-                                setShowQualityMenu(false);
-                              }}
-                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                                isSelected
-                                  ? 'bg-gradient-to-r from-cyan-500/20 to-violet-500/20 text-cyan-300 font-bold border border-cyan-400/30'
-                                  : 'text-white/70 hover:text-white hover:bg-white/10'
-                              }`}
-                            >
-                              <span>{lvl.label}</span>
-                              {isSelected && <FiCheck size={13} className="text-cyan-400" />}
-                            </button>
-                          );
-                        })
-                      ) : (
-                        <div className="px-3 py-2 text-xs text-white/50">
-                          Auto (Direct Stream)
-                        </div>
-                      )}
-
-                      <div className="mt-1 pt-1.5 border-t border-white/5 px-2 text-[9px] text-white/30 text-center">
-                        Select lower resolution for slow internet
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Share / Copy URL */}
-                <button
-                  onClick={handleCopyUrl}
-                  className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs transition-all border border-white/5 flex items-center gap-1.5"
-                  title="Copy Stream URL"
-                >
-                  {copied ? <FiCheck size={12} className="text-emerald-400" /> : <FiShare2 size={12} />}
-                  <span className="hidden sm:inline">{copied ? 'Copied!' : 'Share'}</span>
-                </button>
-
-                {/* PiP */}
-                {document.pictureInPictureEnabled && (
-                  <button
-                    onClick={handleTogglePiP}
-                    className="p-2 text-white/60 hover:text-white transition-colors"
-                    title="Picture in Picture"
-                  >
-                    {isPiP ? <RiPictureInPictureFill size={18} /> : <RiPictureInPictureLine size={18} />}
-                  </button>
-                )}
-
-                {/* Fullscreen */}
-                <button
-                  onClick={handleToggleFullscreen}
-                  className="p-2 text-white/60 hover:text-white transition-colors"
-                  title="Fullscreen"
-                >
-                  {isFullscreen ? <FiMinimize size={18} /> : <FiMaximize size={18} />}
-                </button>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* BDIPTV Info Banner if iframe stream */}
-        {isBDIptv && (
-          <div className="absolute bottom-3 right-3 z-20 flex items-center gap-2">
-            <a
-              href={currentChannel.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-semibold border border-cyan-400/40 backdrop-blur-md shadow-lg transition-all"
-            >
-              <span>Open BDIPTV Direct</span>
-              <FiExternalLink size={12} />
-            </a>
+            {/* Right Controls: Quality Selector & Actions */}
+            <div className="flex items-center gap-2">
+              {/* Playback Quality Selector (Auto, 1080p, 720p, 480p, 360p) */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowQualityMenu(!showQualityMenu)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-cyan-300 text-xs font-semibold border border-cyan-400/30 transition-all shadow-sm"
+                  title="Playback Quality / Resolution Selector"
+                >
+                  <FiSliders size={13} />
+                  <span>{activeQualityText}</span>
+                </button>
+
+                {/* Quality Dropdown Menu */}
+                {showQualityMenu && (
+                  <div className="absolute bottom-11 right-0 w-48 rounded-2xl bg-[#0e0e1e]/95 backdrop-blur-2xl border border-cyan-400/30 p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 animate-slide-up">
+                    <div className="px-3 py-1.5 text-[10px] font-bold text-white/40 uppercase tracking-wider border-b border-white/5 mb-1 flex items-center justify-between">
+                      <span>Quality / Resolution</span>
+                      <FiWifi size={11} className="text-cyan-400" />
+                    </div>
+
+                    {levels.length > 0 ? (
+                      levels.map((lvl) => {
+                        const isSelected = lvl.id === currentLevel;
+                        return (
+                          <button
+                            key={lvl.id}
+                            onClick={() => {
+                              changeQuality(lvl.id);
+                              setShowQualityMenu(false);
+                            }}
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                              isSelected
+                                ? 'bg-gradient-to-r from-cyan-500/20 to-violet-500/20 text-cyan-300 font-bold border border-cyan-400/30'
+                                : 'text-white/70 hover:text-white hover:bg-white/10'
+                            }`}
+                          >
+                            <span>{lvl.label}</span>
+                            {isSelected && <FiCheck size={13} className="text-cyan-400" />}
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="px-3 py-2 text-xs text-white/50">
+                        Auto (Direct Stream)
+                      </div>
+                    )}
+
+                    <div className="mt-1 pt-1.5 border-t border-white/5 px-2 text-[9px] text-white/30 text-center">
+                      Select lower resolution for slow internet
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Share / Copy URL */}
+              <button
+                onClick={handleCopyUrl}
+                className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs transition-all border border-white/5 flex items-center gap-1.5"
+                title="Copy Stream URL"
+              >
+                {copied ? <FiCheck size={12} className="text-emerald-400" /> : <FiShare2 size={12} />}
+                <span className="hidden sm:inline">{copied ? 'Copied!' : 'Share'}</span>
+              </button>
+
+              {/* PiP */}
+              {document.pictureInPictureEnabled && (
+                <button
+                  onClick={handleTogglePiP}
+                  className="p-2 text-white/60 hover:text-white transition-colors"
+                  title="Picture in Picture"
+                >
+                  {isPiP ? <RiPictureInPictureFill size={18} /> : <RiPictureInPictureLine size={18} />}
+                </button>
+              )}
+
+              {/* Fullscreen */}
+              <button
+                onClick={handleToggleFullscreen}
+                className="p-2 text-white/60 hover:text-white transition-colors"
+                title="Fullscreen"
+              >
+                {isFullscreen ? <FiMinimize size={18} /> : <FiMaximize size={18} />}
+              </button>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
