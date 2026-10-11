@@ -16,5 +16,41 @@
     "tag": "Sports & Events",
     "icon": "🏆",
     "badge": "Live Sports"
+  },
+  {
+    "id": "qa-cinevo-ru",
+    "name": "Cinevo Cinema (RU)",
+    "url": "https://cinevo.ru/",
+    "desc": "HD Movies, Series & Cinema Streaming Hub",
+    "tag": "Movies & Series",
+    "icon": "🎬",
+    "badge": "HD Cinema"
+  },
+  {
+    "id": "qa-cinevo-nl",
+    "name": "Cinevo Streaming (NL)",
+    "url": "https://cinevo.nl/",
+    "desc": "International Movies & Ultra HD Streams",
+    "tag": "Movies & Series",
+    "icon": "🍿",
+    "badge": "Premium Cinema"
+  },
+  {
+    "id": "qa-kora-live",
+    "name": "Kora Live Sports",
+    "url": "https://koray-live.live/",
+    "desc": "Live Football Matches & International Sports",
+    "tag": "Live Football",
+    "icon": "⚽",
+    "badge": "Live Football"
+  },
+  {
+    "id": "qa-yacine-tv",
+    "name": "Yacine TV Live",
+    "url": "https://yacinee-tv.net/",
+    "desc": "Live Matches, beIN Sports & Events Hub",
+    "tag": "Sports & Events",
+    "icon": "📺",
+    "badge": "Sports Hub"
   }
 ]

@@ -25,7 +25,6 @@ const CATEGORY_ICONS = {
   Religious: '🕌',
 };
 
-// Only the 2 requested, working BDIPTV portal links
 const QUICK_ACCESS_ITEMS = [
   {
     id: 'qa-bdiptv-main',
@@ -50,6 +49,54 @@ const QUICK_ACCESS_ITEMS = [
     glowColor: 'from-amber-500/20 via-orange-600/10 to-rose-600/20',
     borderColor: 'border-amber-500/30 hover:border-amber-400',
     textColor: 'text-amber-500 dark:text-amber-300',
+  },
+  {
+    id: 'qa-cinevo-ru',
+    name: 'Cinevo Cinema (RU)',
+    url: 'https://cinevo.ru/',
+    desc: 'HD Movies, Series & Cinema Streaming Hub',
+    tag: 'Movies & Series',
+    icon: '🎬',
+    badge: 'HD Cinema',
+    glowColor: 'from-purple-500/20 via-pink-600/10 to-rose-600/20',
+    borderColor: 'border-purple-500/30 hover:border-purple-400',
+    textColor: 'text-purple-500 dark:text-purple-300',
+  },
+  {
+    id: 'qa-cinevo-nl',
+    name: 'Cinevo Streaming (NL)',
+    url: 'https://cinevo.nl/',
+    desc: 'International Movies & Ultra HD Streams',
+    tag: 'Movies & Series',
+    icon: '🍿',
+    badge: 'Premium Cinema',
+    glowColor: 'from-fuchsia-500/20 via-violet-600/10 to-indigo-600/20',
+    borderColor: 'border-fuchsia-500/30 hover:border-fuchsia-400',
+    textColor: 'text-fuchsia-500 dark:text-fuchsia-300',
+  },
+  {
+    id: 'qa-kora-live',
+    name: 'Kora Live Sports',
+    url: 'https://koray-live.live/',
+    desc: 'Live Football Matches & International Sports',
+    tag: 'Live Football',
+    icon: '⚽',
+    badge: 'Live Football',
+    glowColor: 'from-emerald-500/20 via-teal-600/10 to-cyan-600/20',
+    borderColor: 'border-emerald-500/30 hover:border-emerald-400',
+    textColor: 'text-emerald-500 dark:text-emerald-300',
+  },
+  {
+    id: 'qa-yacine-tv',
+    name: 'Yacine TV Live',
+    url: 'https://yacinee-tv.net/',
+    desc: 'Live Matches, beIN Sports & Events Hub',
+    tag: 'Sports & Events',
+    icon: '📺',
+    badge: 'Sports Hub',
+    glowColor: 'from-blue-500/20 via-indigo-600/10 to-violet-600/20',
+    borderColor: 'border-blue-500/30 hover:border-blue-400',
+    textColor: 'text-blue-500 dark:text-blue-300',
   },
 ];
 
@@ -371,8 +418,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* 2 Working Quick Access Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {/* Quick Access Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {QUICK_ACCESS_ITEMS.map((item) => (
                 <div
                   key={item.id}
